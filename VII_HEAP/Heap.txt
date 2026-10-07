@@ -1,0 +1,557 @@
+# Heap Notes (DSA)
+
+## 1. What is a Heap?
+
+Heap ek specialized tree-based data structure hai jo **Complete Binary Tree** hota hai aur ek special ordering property follow karta hai.
+
+Heap ka main purpose:
+
+* Priority Queue implement karna
+* Fast insertion
+* Fast deletion of highest/lowest priority element
+* Heap Sort
+* Kth Largest / Smallest type problems
+
+---
+
+# 2. Complete Binary Tree
+
+Heap hamesha Complete Binary Tree hota hai.
+
+Definition:
+
+* Har level completely filled hona chahiye except last level.
+* Last level left se right fill hota hai.
+
+Valid Heap Shape:
+
+```text
+        50
+      /    \
+    30      40
+   /  \    /
+ 10   20  15
+```
+
+Invalid:
+
+```text
+        50
+      /    \
+    30      40
+      \
+      20
+```
+
+Kyunki last level left se fill nahi hua.
+
+---
+
+# 3. Why Array is Used Instead of Linked List?
+
+Heap Complete Binary Tree hota hai.
+
+Isliye nodes ka position mathematically calculate kiya ja sakta hai.
+
+Array representation:
+
+```text
+Index: 0  1  2  3  4  5
+Value:50 30 40 10 20 15
+```
+
+Tree:
+
+```text
+        50
+      /    \
+    30      40
+   /  \    /
+ 10   20  15
+```
+
+Array access:
+
+```java
+parent(i) = (i - 1) / 2
+
+leftChild(i) = 2*i + 1
+
+rightChild(i) = 2*i + 2
+```
+
+Advantages:
+
+* No extra node objects
+* Better cache locality
+* Easy indexing
+* Less memory
+
+---
+
+# 4. Types of Heap
+
+## Max Heap
+
+Rule:
+
+```text
+Parent >= Children
+```
+
+Example:
+
+```text
+        100
+       /   \
+      80    90
+     / \
+    50 70
+```
+
+Maximum element root par hota hai.
+
+---
+
+## Min Heap
+
+Rule:
+
+```text
+Parent <= Children
+```
+
+Example:
+
+```text
+        10
+       /  \
+      20   30
+     / \
+    50 70
+```
+
+Minimum element root par hota hai.
+
+---
+
+# 5. Heap Variables
+
+```java
+int[] heap;
+int size;
+int capacity;
+```
+
+Meaning:
+
+```text
+size = current number of elements
+
+capacity = maximum number of elements
+```
+
+Important:
+
+```text
+Last valid index = size - 1
+```
+
+---
+
+# 6. Utility Operations
+
+## isEmpty()
+
+```java
+return size == 0;
+```
+
+Complexity: O(1)
+
+---
+
+## isFull()
+
+
+return size == capacity;
+
+
+Complexity: O(1)
+
+---
+
+## size()
+
+```java
+return size;
+```
+
+Complexity:
+
+```text
+O(1)
+```
+
+---
+
+## peek()
+
+Max Heap:
+
+```java
+return heap[0];
+```
+
+Min Heap:
+
+```java
+return heap[0];
+```
+
+Reason:
+
+Root par hi max/min stored hota hai.
+
+Complexity:
+
+```text
+O(1)
+```
+
+---
+
+# 7. Heapify Up
+
+Used In:
+
+```text
+Insertion
+```
+
+Concept:
+
+Naya element hamesha last position par insert hota hai.
+
+Agar heap property violate kare:
+
+```text
+Parent se swap
+```
+
+Jab tak correct position na mil jaaye.
+
+Example:
+
+Insert 60
+
+```text
+        50
+       /  \
+      30   40
+     /
+    60
+```
+
+Swap:
+
+```text
+        50
+       /  \
+      60   40
+     /
+    30
+```
+
+Again:
+
+```text
+        60
+       /  \
+      50   40
+     /
+    30
+```
+
+This process:
+
+```text
+Heapify Up
+```
+
+Complexity:
+
+```text
+O(log n)
+```
+
+---
+
+# 8. Insertion
+
+Steps:
+
+1. Insert at last index.
+2. Heapify Up.
+
+Pseudo:
+
+```java
+heap[size] = value;
+heapifyUp(size);
+size++;
+```
+
+Complexity:
+
+```text
+O(log n)
+```
+
+---
+
+# 9. Heapify Down
+
+Used In:
+
+```text
+Deletion
+Build Heap
+Heap Sort
+```
+
+Concept:
+
+Delete root.
+
+Last element ko root par lao.
+
+Ab root galat position par ho sakta hai.
+
+Usse correct position tak neeche bhejo.
+
+Example:
+
+```text
+        100
+       /   \
+      80    90
+     / \
+    50 70
+```
+
+Delete 100.
+
+Move 70 to root.
+
+```text
+        70
+       /   \
+      80    90
+     /
+    50
+```
+
+Swap with larger child.
+
+```text
+        90
+       /   \
+      80    70
+     /
+    50
+```
+
+Heap restored.
+
+Complexity:
+
+```text
+O(log n)
+```
+
+---
+
+# 10. deleteMax()
+
+Max Heap only.
+
+Steps:
+
+1. Save root.
+2. Move last element to root.
+3. Reduce size.
+4. Heapify Down.
+5. Return max.
+
+Pseudo:
+
+```java
+max = heap[0];
+
+heap[0] = heap[size-1];
+
+size--;
+
+heapifyDown(0);
+
+return max;
+```
+
+Complexity:
+
+```text
+O(log n)
+```
+
+---
+
+# 11. deleteMin()
+
+Min Heap only.
+
+Same process.
+
+Only comparison changes.
+
+Complexity:
+
+```text
+O(log n)
+```
+
+---
+
+# 12. Complexity Table
+
+| Operation   | Complexity |
+| ----------- | ---------- |
+| Peek        | O(1)       |
+| Insert      | O(log n)   |
+| Delete Root | O(log n)   |
+| isEmpty     | O(1)       |
+| isFull      | O(1)       |
+| Size        | O(1)       |
+
+---
+
+# 13. Priority Queue vs Heap
+
+Heap:
+
+```text
+Data Structure
+```
+
+Priority Queue:
+
+```text
+Abstract Data Type (ADT)
+```
+
+Priority Queue can be implemented using:
+
+* Array
+* Linked List
+* BST
+* Heap
+
+Most efficient implementation:
+
+```text
+Heap
+```
+
+Therefore:
+
+```text
+Priority Queue uses Heap internally.
+```
+
+---
+
+# 14. Max Heap vs Min Heap
+
+| Feature      | Max Heap     | Min Heap      |
+| ------------ | ------------ | ------------- |
+| Root         | Largest      | Smallest      |
+| Insert       | Heapify Up   | Heapify Up    |
+| Delete       | deleteMax    | deleteMin     |
+| Heapify Down | Larger child | Smaller child |
+
+---
+
+# 15. Key Formula Revision
+
+```java
+parent = (i - 1) / 2;
+
+left = 2*i + 1;
+
+right = 2*i + 2;
+```
+
+Must remember.
+
+---
+
+# 16. Mental Model
+
+Insertion:
+
+```text
+New element enters at bottom
+then climbs upward
+```
+
+Use:
+
+```text
+Heapify Up
+```
+
+Deletion:
+
+```text
+Last element comes to root
+then falls downward
+```
+
+Use:
+
+```text
+Heapify Down
+```
+
+Remember this and most heap questions become easy.
+
+---
+
+# Topics Implemented
+
+✅ Max Heap
+
+✅ Min Heap
+
+✅ isEmpty()
+
+✅ isFull()
+
+✅ size()
+
+✅ peek()
+
+✅ insert()
+
+✅ heapifyUp()
+
+✅ heapifyDown()
+
+✅ deleteMax()
+
+✅ deleteMin()
+
+✅ display()
+
+✅ Priority Queue concept
+
